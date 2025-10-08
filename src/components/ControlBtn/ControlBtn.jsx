@@ -1,16 +1,19 @@
 import "./ControlBtn.css";
 import { useSelector, useDispatch } from "react-redux";
-import { markReady } from "../../redux/cardSlice";
+import { setStage } from "../../redux/cardSlice";
 
 export default function ControlBtn() {
   const dispatch = useDispatch();
-  const { selectedCards, ready } = useSelector((state) => state.cards);
+  const { stage, selectedCards } = useSelector((state) => state.cards);
 
-  if (selectedCards.length !== 21 || ready) return null; // ✅ Hide unless ready to start
+  if (stage !== "rows") return null; // only show during the row-selection phase
 
   return (
     <div className="btn-container">
-      <button className="control-btn" onClick={() => dispatch(markReady())}>
+      <button
+        className="control-btn"
+        onClick={() => dispatch(setStage("redeal"))} // move to redeal phase
+      >
         Ready
       </button>
     </div>

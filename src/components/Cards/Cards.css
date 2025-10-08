@@ -1,54 +1,48 @@
-#card-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: white;
+.cards-wrapper {
+  text-align: center;
+  color: white;
+  margin-top: 100px;
 }
 
 h2 {
-    padding-top: 80px;
-    color: white;
-    text-align: center;
-    font-size: 4rem;
+  font-family: "Grenze Gotisch", serif;
+  font-size: 4rem;
+  font-weight: 300;
+  margin: 0; 
 }
 
 #cards-container {
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-    width: 75vw;
-    margin: 50px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.card {
-  perspective: 1000px;
+.row-wrapper {
+  display: flex;
+
+  margin: 10px auto;
+}
+
+.row-cards {
+  display: flex;
+  margin: 0 auto;
+}
+
+.input-container {
+  padding-top: 60px;
+  padding-right: 30px;
 }
 
 .card-image {
-  width: 120px;
-  height: auto;
-  transition: transform 0.6s; /* ✅ fixed typo */
-  cursor: pointer;
-  transform-style: preserve-3d;
-}
-
-.card-image.flip {
-  animation: flip 0.6s forwards; /* ✅ removed dot before flip */
-}
-
-@keyframes flip {
-  0% {
-    transform: rotateY(180deg);
-  }
-  100% {
-    transform: rotateY(0deg);
-  }
+  border-radius: 8px;
+  transition: transform 0.2s;
 }
 
 .card-image.selected {
-  border: 5px solid gold;
-  transform: scale(1.05);
+  border: 3px solid gold;
   box-shadow: 0 0 10px gold;
+}
+
+.card-image:hover {
+  transform: scale(1.05);
 }
