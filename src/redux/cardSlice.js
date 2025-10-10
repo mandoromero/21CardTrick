@@ -32,13 +32,24 @@ const cardSlice = createSlice({
     updateCards: (state, action) => {
       state.allCards = action.payload;
     },
+    updateSelectedCards: (state, action) => {
+      state.selectedCards = action.payload;
+    },
     setStage: (state, action) => {
       state.stage = action.payload;
     },
   },
 });
 
-export const { shuffleCards, toggleSelectCard, showRows, updateCards, setStage } =
-  cardSlice.actions;
+// ✅ Export all actions
+export const {
+  shuffleCards,
+  toggleSelectCard,
+  showRows,
+  updateCards,
+  updateSelectedCards,
+  setStage,
+} = cardSlice.actions;
 
+// ✅ Default export reducer
 export default cardSlice.reducer;

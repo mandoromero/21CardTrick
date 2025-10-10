@@ -17,11 +17,13 @@
 
 #title {
     margin: 10px 0 0 25px;
+    font-weight: 300;
 }
 
 #counter {
     margin-right: 50px;
     font-size: 1.8rem;
+    font-weight: 300;
 }
 
 #shuffle-btn {

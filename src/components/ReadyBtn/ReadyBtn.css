@@ -1,12 +1,7 @@
-.btn-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 25px;
-}
 
-.control-btn {
+.ready-btn {
     font-family: "Grenze Gotisch", serif;
+    margin-top: 20px;
     font-size: 1.5rem;
     font-weight: bold;
     padding: 5px 15px;

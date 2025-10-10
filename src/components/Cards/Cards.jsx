@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSelectCard, showRows } from "../../redux/cardSlice";
+import {
+  toggleSelectCard,
+  showRows,
+  updateSelectedCards,
+} from "../../redux/cardSlice";
 import backOfCard from "../../assets/Back_of_card/back_of_card.svg";
+import ChooseCards from "../ChooseCards/ChooseCards";
+import CardRows from "../CardRows/CardRows";
 import "./Cards.css";
 
 export default function Cards() {
@@ -11,141 +17,79 @@ export default function Cards() {
   );
 
   const [selectedRow, setSelectedRow] = useState(null);
+  const [currentCards, setCurrentCards] = useState([]);
+  const [round, setRound] = useState(0);
 
-  // --- Selecting cards from full deck ---
+  // --- Select individual cards (first phase)
   const handleSelectCard = (cardName) => {
-    if (stage === "selecting") {
-      dispatch(toggleSelectCard(cardName));
-    }
+    if (stage === "selecting") dispatch(toggleSelectCard(cardName));
   };
 
-  // --- Checkbox for 3-row selection ---
-  const handleRowSelect = (index) => {
-    setSelectedRow(index);
-  };
-
-  // --- First Ready: move to 3-row stage ---
+  // --- Move to 3-row view
   const handleFirstReady = () => {
+    const selected = allCards.filter((c) => selectedCards.includes(c.name));
+    console.log("Selected Cards:", selected);
+    setCurrentCards(selected);
     dispatch(showRows());
+    console.log("Selected cards data:", selected);
   };
 
-  // --- Second Ready: after row selection ---
+  // --- Handle row selection + redeal
   const handleSecondReady = () => {
-    if (selectedRow !== null) {
-      console.log("Second Ready clicked for row:", selectedRow);
-      // Logic for flipping/redeal can be added here
+    if (selectedRow === null) {
+      alert("Did you pick a card? What row is it in?");
+      return;
     }
+
+    const flipped = currentCards.map((c) => ({ ...c, flipped: true }));
+
+    // Divide into 3 rows of 7
+    const rows = [];
+    for (let i = 0; i < 3; i++) rows.push(flipped.slice(i * 7, i * 7 + 7));
+
+    // Stack rows with selected in middle
+    let collected = [];
+    if (selectedRow === 0) collected = [...rows[1], ...rows[0], ...rows[2]];
+    else if (selectedRow === 1) collected = [...rows[0], ...rows[1], ...rows[2]];
+    else collected = [...rows[0], ...rows[2], ...rows[1]];
+
+    // Redeal pattern: top → middle → bottom repeatedly
+    const newRows = [[], [], []];
+    collected.forEach((card, i) => newRows[i % 3].push({ ...card, flipped: false }));
+
+    const redealt = [...newRows[0], ...newRows[1], ...newRows[2]];
+
+    setSelectedRow(null);
+    setCurrentCards(redealt);
+    setRound(round + 1);
+
+    dispatch(updateSelectedCards(redealt.map((c) => c.name)));
   };
 
-  // --- Rows stage (21 selected cards) ---
+  // --- Render 3-row view (after 21 cards chosen)
   if (stage === "rows") {
-    const rows = [];
-    for (let i = 0; i < 3; i++) {
-      rows.push(
-        allCards.filter((c) => selectedCards.includes(c.name)).slice(
-          i * 7,
-          i * 7 + 7
-        )
-      );
-    }
-
     return (
-      <div className="cards-wrapper">
-        <h2>Pick your card and select the row it’s in:</h2>
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="row-wrapper">
-            <div className="row-cards">
-              <div className="input-container">
-                <input
-                  type="checkbox"
-                  checked={selectedRow === rowIndex}
-                  onChange={() => handleRowSelect(rowIndex)}
-                />
-              </div>
-              {row.map((card) => (
-                <img
-                  key={card.name}
-                  src={card.src}
-                  alt={card.name}
-                  className="card-image"
-                  style={{ width: "120px", margin: "15px" }}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {/* Second Ready button appears after a row is selected */}
-        {selectedRow !== null && (
-          <div style={{ marginTop: "25px" }}>
-            <button
-              className="control-btn"
-              onClick={handleSecondReady}
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: "bold",
-                padding: "10px 20px",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              Ready
-            </button>
-          </div>
-        )}
-      </div>
+      <CardRows
+        currentCards={currentCards}
+        selectedRow={selectedRow}
+        handleRowSelect={setSelectedRow}
+        handleSecondReady={handleSecondReady}
+        round={round}
+        backOfCard={backOfCard}
+      />
     );
   }
 
-  // --- Initial stage: 52 cards, 8 rows ---
-  const rows = [];
-  for (let i = 0; i < 7; i++) rows.push(allCards.slice(i * 7, i * 7 + 7));
-  rows.push(allCards.slice(49, 52)); // 8th row: 3 cards
-
+  // --- Render initial 52-card selection view
   return (
-    <div className="cards-wrapper">
-      <h2>Choose 21 Cards</h2>
-      <div id="cards-container">
-        {rows.map((row, rowIndex) => (
-          <div
-            key={rowIndex}
-            className="row-cards"
-            style={{ justifyContent: "flex-start" }}
-          >
-            {row.map((card) => (
-              <img
-                key={card.name}
-                src={showFront ? card.src : backOfCard}
-                alt={card.name}
-                className={`card-image ${
-                  selectedCards.includes(card.name) ? "selected" : ""
-                }`}
-                onClick={() => handleSelectCard(card.name)}
-                style={{ width: "120px", margin: "15px", cursor: "pointer" }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-
-      {/* First Ready button appears after 21 cards are selected */}
-      {selectedCards.length === 21 && stage === "selecting" && (
-        <div style={{ marginTop: "25px" }}>
-          <button
-            className="control-btn"
-            onClick={handleFirstReady}
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              padding: "10px 20px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            Ready
-          </button>
-        </div>
-      )}
-    </div>
+    <ChooseCards
+      allCards={allCards}
+      showFront={showFront}
+      selectedCards={selectedCards}
+      handleSelectCard={handleSelectCard}
+      handleFirstReady={handleFirstReady}
+      stage={stage}
+      backOfCard={backOfCard}
+    />
   );
 }

@@ -1,0 +1,17 @@
+.card-wrapper {
+  margin: 20px auto;
+  border: 1px whit dashed;
+}
+
+
+.row-cards {
+  border: 1px red dashed;
+  display: flex;
+  width: 80%;
+  margin: 20px auto;
+}
+
+.input-container {
+  padding-top: 60px;
+  padding-right: 30px;
+}

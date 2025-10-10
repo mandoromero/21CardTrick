@@ -1,41 +1,16 @@
-.cards-wrapper {
-  text-align: center;
-  color: white;
-  margin-top: 100px;
-}
 
-h2 {
-  font-family: "Grenze Gotisch", serif;
-  font-size: 4rem;
-  font-weight: 300;
-  margin: 0; 
-}
 
-#cards-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
 
-.row-wrapper {
-  display: flex;
 
-  margin: 10px auto;
-}
-
-.row-cards {
-  display: flex;
-  margin: 0 auto;
-}
-
-.input-container {
-  padding-top: 60px;
-  padding-right: 30px;
-}
 
 .card-image {
+  margin: 20px 0 0 20px;
+  width: 120px;
+  justify-content: space-bewteen;
   border-radius: 8px;
   transition: transform 0.2s;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .card-image.selected {
