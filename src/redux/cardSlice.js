@@ -27,13 +27,13 @@ const cardSlice = createSlice({
   reducers: {
     /** 🔁 Shuffle button clicked — start selection phase */
     shuffleCards(state) {
-      state.allCards = shuffleArray(state.allCards);
-      state.showFront = true;        // flip cards face up after shuffle
-      state.stage = "selecting";     // allow player to pick
       state.selectedCards = [];
+      state.currentCards = [];
+      state.selectedRow = null;
+      state.showFront = false;
       state.round = 0;
-    },
-
+      state.stage = "initial";
+    },  
     /** 🃏 Select or deselect a card (limit 21) */
     toggleSelectCard(state, action) {
       const cardName = action.payload;
@@ -70,14 +70,14 @@ const cardSlice = createSlice({
       const { currentCards, selectedRow } = state;
       if (selectedRow === null) return;
 
-      // Flip cards face down
-      const flipped = currentCards.map((c) => ({ ...c, flipped: true }));
+     // Flip cards internally
+    const flipped = currentCards.map((c) => ({ ...c, flipped: true }));
 
       // Split into 3 rows of 7
       const rows = [];
       for (let i = 0; i < 3; i++) rows.push(flipped.slice(i * 7, i * 7 + 7));
 
-      // Collect with selected row in middle
+     // Collect with selected row in middle
       let collected = [];
       if (selectedRow === 0) collected = [...rows[1], ...rows[0], ...rows[2]];
       else if (selectedRow === 1) collected = [...rows[0], ...rows[1], ...rows[2]];
@@ -86,19 +86,22 @@ const cardSlice = createSlice({
       // Redeal top → middle → bottom
       const newRows = [[], [], []];
       collected.forEach((card, i) =>
-        newRows[i % 3].push({ ...card, flipped: false })
+       newRows[i % 3].push({ ...card, flipped: false })
       );
 
       const redealt = [...newRows[0], ...newRows[1], ...newRows[2]];
 
-      // Update Redux state
       state.currentCards = redealt;
       state.selectedRow = null;
       state.round += 1;
-      state.showFront = false; // face down for next selection
 
-      // After 3 redeals → go to reveal stage
-      if (state.round === 5) state.stage = "revealPrep";
+      // Stage transition
+      if (state.round >= 4) {
+        state.stage = "revealPrep"; // show RevealSetup after 3 redeals
+        state.showFront = false;
+      } else {
+        state.showFront = true; // keep cards clickable for next row selection
+      }
     },
 
     /** 🔁 Reset to initial state */

@@ -1,60 +1,85 @@
-.reveal-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-left: 50px;
+.reveal-setup-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px;
 }
 
-.reveal-wrapper h2 {
-    color: white;
-    font-size: 48px;
-    margin-bottom: 20px;
+.reveal-setup-title {
+  color: white;
+  font-size: 48px;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
+.reveal-set-container {
+  width: 85%;
+  height: 615px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 40px;
+}
+
+/* Fix pile position */
 .pile-container {
-    position: relative;
-    width: 150px;
-    height: 200px;
-    margin-top: 20px;
-   
+  position: relative;
+  width: 120px;
+  height: 180px;
+  margin-bottom: 60px;
 }
 
 .pile-card {
-    position: absolute;
-    width: 120px;
-    left: 1;
-    top: 1;
-    transform: rotate(var(--angle, 0deg)) translate(var(--offset-x, 0), var(--offset-y,0));
-    opacity: 0.9;
-    border-radius: 5%
-  
+  position: absolute;
+  width: 100%;
+  height: auto;
+  left: 0;
+  top: 0;
+  transform: rotate(var(--angle, 0deg))
+    translate(var(--offset-x, 0px), var(--offset-y, 0px));
+  opacity: 0.9;
+  border-radius: 8px;
 }
 
+/* Add scattered angles for realism */
 .pile-container img:nth-child(3n) {
-    --angle: -3deg;
+  --angle: -3deg;
 }
-
 .pile-container img:nth-child(2n) {
-    --angle: 4deg;
-    --offset-x: 5px;
+  --angle: 4deg;
+  --offset-x: 3px;
 }
-
 .pile-container img:nth-child(5n) {
-    --angle: -6deg;
-    --offset-Y: 4deg;
+  --angle: -6deg;
+  --offset-y: 3px;
 }
 
-.reveal-title {
-    margin: 100px auto 0 auto;
-
+/* Grid of 10 cards */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: repeat(2, 120px);
+  gap: 16px;
+  justify-content: center;
 }
 
-.reveal-container {
-    width: 75%;
-    height: 615px;
-    margin: 5px auto 0 auto;
+.grid-card {
+  width: 80px;
+  height: auto;
+  border-radius: 8px;
+  opacity: 0.95;
+  transform: scale(0);
+  animation: popIn 0.3s forwards;
+}
+
+@keyframes popIn {
+  to {
+    transform: scale(1);
+  }
 }
 
 .reveal-btn {
-    margin: 0 auto;
+  margin-top: 60px;
 }

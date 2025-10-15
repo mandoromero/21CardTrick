@@ -29,16 +29,18 @@ export default function ChooseCards({
               const isSelected = selectedCards.some((c) => c.name === card.name);
               return (
                 <div key={card.name} className="card-wrapper">
-                  <img
-                    src={showFront ? card.src : backOfCard}
-                    alt={card.name}
-                    className={`card-image ${isSelected ? "selected" : ""}`}
-                    onClick={() => {
-                      if (stage === "selecting") {
-                        dispatch(toggleSelectCard(card.name));
-                      }
-                    }}
-                  />
+                  <div className={`card ${isSelected ? "flipped" : ""}`} 
+                    onClick={() => dispatch(toggleSelectCard(card.name))}>
+                    <div className="card-inner">
+                      <div className="card-front">
+                        <img src={card.src} alt={card.name} className="card-image" />
+                      </div>
+                    <div className="card-back">
+                      <img src={backOfCard} alt="Back of Card" className="card-image" />
+                    </div>
+                  </div>
+                </div>
+
                 </div>
               );
             })}

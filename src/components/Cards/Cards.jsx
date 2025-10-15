@@ -19,12 +19,16 @@ export default function Cards() {
     round,
   } = useSelector((state) => state.cards);
 
-  // ✅ Move to rows view after first ready
+  /** Move to rows view after selecting 21 cards */
   const handleFirstReady = () => {
+    if (selectedCards.length !== 21) {
+      alert("Please select exactly 21 cards!");
+      return;
+    }
     dispatch(showRows());
   };
 
-  // ✅ Handle row selection & redeal
+  /** Handle row selection & redeal */
   const handleSecondReady = () => {
     if (selectedRow === null) {
       alert("Please select a row first!");
@@ -33,9 +37,10 @@ export default function Cards() {
     dispatch(redealCards());
   };
 
-  // Inside Cards.jsx — INITIAL STAGE
+  // ==========================
+  // INITIAL STAGE — show full deck
+  // ==========================
   if (stage === "initial") {
-    // Split into 8 rows (7x7 + 1x3)
     const rows = [];
     for (let i = 0; i < 7; i++) rows.push(allCards.slice(i * 7, i * 7 + 7));
     rows.push(allCards.slice(49, 52));
@@ -43,17 +48,12 @@ export default function Cards() {
     return (
       <div className="cards-wrapper">
         <h2>Click Shuffle to Begin</h2>
-
         <div className="cards-container">
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className="cards-row">
               {row.map((card) => (
                 <div key={card.name} className="card-wrapper">
-                  <img
-                    src={backOfCard}
-                    alt="Back of card"
-                    className="card-image"
-                  />
+                  <img src={backOfCard} alt="Back of card" className="card-image" />
                 </div>
               ))}
             </div>
@@ -63,22 +63,25 @@ export default function Cards() {
     );
   }
 
+  // ==========================
+  // SELECTION STAGE — choose 21 cards
+  // ==========================
+  if (stage === "selecting") {
+    return (
+      <ChooseCards
+        allCards={allCards}
+        showFront={showFront}
+        selectedCards={selectedCards}
+        stage={stage}
+        handleFirstReady={handleFirstReady}
+        backOfCard={backOfCard}
+      />
+    );
+  }
 
-    // ✅ SELECTION STAGE — choose 21 cards
-    if (stage === "selecting") {
-      return (
-        <ChooseCards
-          allCards={allCards}
-          showFront={showFront}
-          selectedCards={selectedCards}
-          stage={stage}
-          handleFirstReady={handleFirstReady}
-          backOfCard={backOfCard}
-        />
-      );
-    }
-
-  // ✅ ROW STAGE — user picks the correct row
+  // ==========================
+  // ROW STAGE — select which row contains the card
+  // ==========================
   if (stage === "rows") {
     return (
       <CardRows
@@ -91,11 +94,17 @@ export default function Cards() {
     );
   }
 
-
+  // ==========================
+  // REVEAL STAGE — show the final chosen card
+  // ==========================
   if (stage === "revealPrep") {
-    return <RevealSetup currentCards={currentCards} backOfCard={backOfCard} />;
+    return (
+      <RevealSetup
+        currentCards={currentCards}
+        backOfCard={backOfCard}
+      />
+    );
   }
 
   return null;
 }
-
