@@ -32,7 +32,7 @@ const cardSlice = createSlice({
       state.selectedRow = null;
       state.showFront = false;
       state.round = 0;
-      state.stage = "initial";
+      state.stage = "selecting";
     },  
     /** 🃏 Select or deselect a card (limit 21) */
     toggleSelectCard(state, action) {
@@ -49,6 +49,18 @@ const cardSlice = createSlice({
         const card = state.allCards.find((c) => c.name === cardName);
         if (card) state.selectedCards.push(card);
       }
+    },
+    flipAllFaceUp: (state) => {
+      state.allCards = state.allCards.map((card) => ({
+        ...cardSlice,
+        faceUp: false,
+      }));
+    },
+    flipAllFaceDown: (state) => {
+      state.allCards = state.allCards.map((card) => ({
+        ...card,
+        faceUp: false,
+      }));
     },
 
     /** ▶️ Move to 3-row view after selecting 21 cards */

@@ -13,10 +13,12 @@ export default function ChooseCards({
 }) {
   const dispatch = useDispatch();
 
-  // Split cards into 7 rows (last one has 3)
+  // ✅ Create 8 rows: 7x7 + 1x3 = 52 cards
   const rows = [];
-  for (let i = 0; i < 7; i++) rows.push(allCards.slice(i * 7, i * 7 + 7));
-  rows.push(allCards.slice(49, 52));
+  for (let i = 0; i < 7; i++) {
+    rows.push(allCards.slice(i * 7, i * 7 + 7)); // 7 full rows
+  }
+  rows.push(allCards.slice(49, 52)); // final 3 cards
 
   return (
     <div className="cards-wrapper">
@@ -28,19 +30,28 @@ export default function ChooseCards({
             {row.map((card) => {
               const isSelected = selectedCards.some((c) => c.name === card.name);
               return (
-                <div key={card.name} className="card-wrapper">
-                  <div className={`card ${isSelected ? "flipped" : ""}`} 
-                    onClick={() => dispatch(toggleSelectCard(card.name))}>
+                <div key={card.name} className={`card-wrapper ${isSelected ? "selected" : ""}`}>
+                  <div
+                    className="card"
+                    onClick={() => dispatch(toggleSelectCard(card.name))}
+                  >
                     <div className="card-inner">
                       <div className="card-front">
-                        <img src={card.src} alt={card.name} className="card-image" />
+                        <img
+                          src={card.src}
+                          alt={card.name}
+                          className="card-image"
+                        />
                       </div>
-                    <div className="card-back">
-                      <img src={backOfCard} alt="Back of Card" className="card-image" />
+                      <div className="card-back">
+                        <img
+                          src={backOfCard}
+                          alt="Back of Card"
+                          className="card-image"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-
                 </div>
               );
             })}
