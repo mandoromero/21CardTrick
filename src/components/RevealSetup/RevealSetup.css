@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   margin-top: 60px;
+  padding-top: 220px;
 }
 
 .reveal-setup-title {
@@ -26,8 +27,8 @@
 /* Fix pile position */
 .pile-container {
   position: relative;
-  width: 120px;
-  height: 180px;
+  width: 90px;
+  height: 135px;
   margin-bottom: 60px;
 }
 

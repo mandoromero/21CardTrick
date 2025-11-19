@@ -27,6 +27,7 @@ const cardSlice = createSlice({
   reducers: {
     /** 🔁 Shuffle button clicked — start selection phase */
     shuffleCards(state) {
+      state.allCards  = shuffleArray(state.allCards);
       state.selectedCards = [];
       state.currentCards = [];
       state.selectedRow = null;
